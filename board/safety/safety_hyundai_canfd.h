@@ -53,6 +53,8 @@ const CanMsg HYUNDAI_CANFD_HDA1_TX_MSGS[] = {
   {0x1E0, 0, 16}, // LFAHDA_CLUSTER
   {0x160, 0, 16}, // ADRV_0x160
   {0x7D0, 0, 8},  // tester present for radar ECU disable
+  {0x161, 0, 32}, // MSG_161
+  {0x162, 0, 32}, // MSG_162
 };
 
 
@@ -364,7 +366,9 @@ static int hyundai_canfd_fwd_hook(int bus_num, int addr) {
     // CRUISE_INFO and ADRV_0x160 for non-HDA2, we send our own longitudinal commands and to show FCA light
     bool is_scc_msg = (((addr == 0x1a0) || (addr == 0x160)) && hyundai_longitudinal && !hyundai_canfd_hda2);
 
-    bool block_msg = is_lkas_msg || is_lfa_msg || is_lfahda_msg || is_scc_msg;
+    bool is_ccnc_msg = (addr == 0x161) || (addr == 0x162);
+
+    bool block_msg = is_lkas_msg || is_lfa_msg || is_lfahda_msg || is_scc_msg || is_ccnc_msg;
     if (!block_msg) {
       bus_fwd = 0;
     }
